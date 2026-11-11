@@ -1,3 +1,10 @@
+# Unreleased
+
+# Version 4.3.0
+
+- `Poller::wait` clears a pending notification only when one is set, it no
+  longer writes the shared flag after every wait.
+
 # Version 4.2.0
 
 - kqueue: coalesce deferred changes per fd and remove them in constant time on

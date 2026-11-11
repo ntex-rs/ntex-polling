@@ -863,8 +863,11 @@ impl Poller {
                 }
             }
 
-            // Clear the notification, if any.
-            self.notifier.0.notified.swap(false, Ordering::SeqCst);
+            // Clear the notification, if any. Most waits are not notified, and a
+            // load keeps the cache line shared with notifying threads.
+            if self.notifier.0.notified.load(Ordering::SeqCst) {
+                self.notifier.0.notified.swap(false, Ordering::SeqCst);
+            }
 
             // Indicate number of new events.
             return Ok(events.len() - before);
